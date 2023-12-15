@@ -152,7 +152,7 @@ partial class Build : NukeBuild
         return Repository.Branch?.ToLower() switch
         {
             MainBranch when IsServerBuild => null,
-            _ => $"-{PreviewBranch}{DateTimeNow():HHmmss}"
+            _ => $"-rc{DateTimeNow():HHmmss}"
         };
     }
 
