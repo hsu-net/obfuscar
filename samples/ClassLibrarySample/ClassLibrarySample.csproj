@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Hsu.Obfuscar.DotNetTool" Version="2023.412.14-">
+      <PackageReference Include="Hsu.Obfuscar.DotNetTool" Version="2023.412.14">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
