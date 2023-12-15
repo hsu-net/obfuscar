@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Obfuscator>
+  <!-- https://docs.obfuscar.com/getting-started/configuration -->
+  <!-- https://github.com/obfuscar/obfuscar/blob/master/Obfuscar/Settings.cs -->
+  
+  <Var name="InPath" value="." />
+  <Var name="OutPath" value=".\obfuscated" />
+  <Var name="RenameFields" value="true" />
+  <Var name="RenameProperties" value="true" />
+  <Var name="RenameEvents" value="true" />
+  <Var name="KeepPublicApi" value="true" />
+  <Var name="HidePrivateApi" value="true" />
+  <Var name="ReuseNames" value="true" />
+  <Var name="UseUnicodeNames" value="false" />
+  <Var name="UseKoreanNames" value="false" />
+  <Var name="HideStrings" value="false" />
+  <Var name="OptimizeMethods" value="true" />
+  <Var name="SuppressIldasm" value="false" />
+
+  <Module file="ClassLibrarySample.dll">
+    <SkipEnums value="true" />
+  </Module>
+  
+  <!-- <Include path="obfuscar.assemblies.xml" /> -->
+  <Include path="obfuscar.assemblies.xml" />
+</Obfuscator>

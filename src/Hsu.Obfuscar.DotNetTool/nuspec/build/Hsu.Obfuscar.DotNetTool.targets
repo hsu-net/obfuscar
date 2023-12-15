@@ -1,0 +1,168 @@
+<Project>
+    <Target Name="_ObfuscarGlobalToolRestore"
+            BeforeTargets="Restore">
+        <Exec
+                ConsoleToMsBuild="true"
+                UseUtf8Encoding="Always"
+                Command="dotnet tool restore">
+        </Exec>
+    </Target>
+
+    <Target Name="_ObfuscarGlobalToolCheckPrerequisites">
+        <!-- check local -->
+        <Exec
+                ConsoleToMsBuild="true"
+                UseUtf8Encoding="Always"
+                Command="dotnet tool list Obfuscar.GlobalTool">
+            <Output TaskParameter="ConsoleOutput" PropertyName="ObfuscarGlobalToolLocalCheckOutput"/>
+        </Exec>
+        <PropertyGroup Condition="$(ObfuscarGlobalToolLocalCheckOutput.IndexOf('obfuscar.console')) != -1">
+            <ObfuscarGlobalToolExists>1</ObfuscarGlobalToolExists>
+        </PropertyGroup>
+        <Message
+                Condition="$(ObfuscarGlobalToolExists)==1"
+                Text="The project '$(ProjectName)' found Obfuscar.GlobalTool in local"
+                Importance="high"
+        />
+
+        <!-- check global -->
+        <Exec
+                Condition="$(ObfuscarGlobalToolExists) != 1"
+                ConsoleToMsBuild="true"
+                UseUtf8Encoding="Always"
+                Command="dotnet tool list -g Obfuscar.GlobalTool">
+            <Output TaskParameter="ConsoleOutput" PropertyName="ObfuscarGlobalToolGlobalCheckOutput"/>
+        </Exec>
+        <PropertyGroup Condition="$(ObfuscarGlobalToolGlobalCheckOutput.IndexOf('obfuscar.console')) != -1">
+            <ObfuscarGlobalToolExists>0</ObfuscarGlobalToolExists>
+        </PropertyGroup>
+        <Message
+                Condition="$(ObfuscarGlobalToolExists)==0"
+                Text="The project '$(ProjectName)' found Obfuscar.GlobalTool in global"
+                Importance="high"
+        />
+
+        <!-- Raise an error if we're unable to find Obfuscator.GlobalTool -->
+        <Error
+                Condition="$(ObfuscarGlobalToolExists) != 1 AND $(ObfuscarGlobalToolExists) != 0"
+                Text="Not found 'Obfuscator.GlobalTool',please install it,see https://www.nuget.org/packages/Obfuscar.GlobalTool ."/>
+    </Target>
+    
+    <Target Name="_ObfuscarTemplateTask"
+            Condition="'$(TargetFramework)' != ''"
+            BeforeTargets="ObfuscarTask"
+            DependsOnTargets="_ObfuscarTask">
+
+        <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' == 'true'">
+            <ObfuscarAssembliesIncludeContent>
+                <Include path="$(ObfuscarAssembliesName).xml" />
+            </ObfuscarAssembliesIncludeContent>
+        </PropertyGroup>
+        <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' != 'true'">
+            <ObfuscarAssembliesIncludeContent></ObfuscarAssembliesIncludeContent>
+        </PropertyGroup>
+        
+        <PropertyGroup>
+            <ObfuscarContents>
+                <![CDATA[<?xml version="1.0"?>
+<Obfuscator>
+  <!-- https://docs.obfuscar.com/getting-started/configuration -->
+  <!-- https://github.com/obfuscar/obfuscar/blob/master/Obfuscar/Settings.cs -->
+  
+  <Var name="InPath" value="." />
+  <Var name="OutPath" value=".\$(ObfuscatedDir)" />
+  <Var name="RenameFields" value="true" />
+  <Var name="RenameProperties" value="true" />
+  <Var name="RenameEvents" value="true" />
+  <Var name="KeepPublicApi" value="true" />
+  <Var name="HidePrivateApi" value="true" />
+  <Var name="ReuseNames" value="true" />
+  <Var name="UseUnicodeNames" value="false" />
+  <Var name="UseKoreanNames" value="false" />
+  <Var name="HideStrings" value="false" />
+  <Var name="OptimizeMethods" value="true" />
+  <Var name="SuppressIldasm" value="false" />
+
+  <Module file="$(TargetFileName)">
+    <SkipEnums value="true" />
+  </Module>
+  
+  <!-- <Include path="$(ObfuscarAssembliesName).xml" /> -->
+  $(ObfuscarAssembliesIncludeContent)
+</Obfuscator>]]>
+            </ObfuscarContents>
+        </PropertyGroup>
+
+        <WriteLinesToFile
+                File="$(ObfuscarConfigPath)"
+                Condition="!Exists($(ObfuscarConfigPath))"
+                Lines="$(ObfuscarContents)" />
+
+        <PropertyGroup Condition="'$(TargetFrameworks)' == ''">
+            <_ObfuscarAssembliesName>$(ObfuscarAssembliesName)</_ObfuscarAssembliesName>
+        </PropertyGroup>
+        <PropertyGroup Condition="'$(TargetFrameworks)' != ''">
+            <_ObfuscarAssembliesName>$(ObfuscarAssembliesName)-$(TargetFramework)</_ObfuscarAssembliesName>
+        </PropertyGroup>
+
+        <PropertyGroup>
+            <ObfuscarAssembliesPath>$(ProjectDir)$(ObfuscarRootPath)\$(_ObfuscarAssembliesName).xml</ObfuscarAssembliesPath>
+            <ObfuscarAssembliesContents><![CDATA[<?xml version="1.0"?>
+<Include>
+    <AssemblySearchPath path='.' />
+</Include>]]>
+            </ObfuscarAssembliesContents>
+        </PropertyGroup>
+        
+        <WriteLinesToFile
+                Condition="'$(ObfuscarAssembliesInclude)' == 'true' and !Exists($(ObfuscarAssembliesPath))"
+                File="$(ObfuscarAssembliesPath)"
+                Lines="$(ObfuscarAssembliesContents)" />
+    </Target>
+    
+    <Target Name="_ObfuscarTask"
+            Condition="'$(TargetFramework)' != ''"
+            DependsOnTargets="_ObfuscarGlobalToolCheckPrerequisites">
+        <PropertyGroup Condition="$(ObfuscarGlobalToolExists) == 0">
+            <ObfuscateCommand>obfuscar.console obfuscar.xml</ObfuscateCommand>
+        </PropertyGroup>
+        <PropertyGroup Condition="$(ObfuscarGlobalToolExists) == 1">
+            <ObfuscateCommand>dotnet obfuscar.console obfuscar.xml</ObfuscateCommand>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="ObfuscarTask"
+            AfterTargets="AfterBuild"
+            BeforeTargets="PackTask"
+            DependsOnTargets="_ObfuscarTask"
+            Condition="'$(ObfuscarBuild)'=='true' and '$(TargetFramework)' != ''">
+        
+        <Copy
+                Condition="'$(ObfuscarAssembliesInclude)' == 'true'"
+                SourceFiles="$(ObfuscarAssembliesPath)"
+                DestinationFiles="$(OutputPath)\$(ObfuscarAssembliesName).xml"
+                SkipUnchangedFiles="true"/>
+        <Copy
+                SourceFiles="$(ObfuscarConfigPath)"
+                DestinationFolder="$(OutputPath)"
+                SkipUnchangedFiles="true"/>
+        <Exec
+                Condition="$(ObfuscarGlobalToolExists) == 1 or $(ObfuscarGlobalToolExists) == 0" 
+                WorkingDirectory="$(OutputPath)" 
+                Command="$(ObfuscateCommand)"/>
+
+        <ItemGroup>
+            <_ModuleFile Include="$(OutputPath)$(TargetFileName)" />
+            <_ModuleFileToBackup Include="$(OutputPath)$(TargetFileName).bak" />
+            <_ModuleFileToCopy Include="$(OutputPath)$(ObfuscatedDir)\$(TargetFileName)" />
+        </ItemGroup>
+        <Copy SourceFiles="@(_ModuleFile)"
+              DestinationFiles="@(_ModuleFileToBackup)"
+              OverwriteReadOnlyFiles="True"
+              SkipUnchangedFiles="True" />
+        <Copy SourceFiles="@(_ModuleFileToCopy)"
+              DestinationFolder="$(OutputPath)"
+              OverwriteReadOnlyFiles="True"
+              SkipUnchangedFiles="True" />
+    </Target>
+</Project>

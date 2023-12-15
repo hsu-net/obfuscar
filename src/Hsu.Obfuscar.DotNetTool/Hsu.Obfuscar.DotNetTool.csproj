@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Pack">
+
+    <PropertyGroup>
+        <NoBuild>true</NoBuild>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!--https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference-->
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <NuspecFile>Hsu.Obfuscar.DotNetTool.nuspec</NuspecFile>
+        <PackageOutputPath>..\..\artifacts</PackageOutputPath>
+        <NuspecProperties>version=$(Version)</NuspecProperties>
+    </PropertyGroup>
+
+</Project>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+<!--        <TargetFramework>net6.0</TargetFramework>-->
+        <TargetFrameworks>net6.0;net8.0;</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ObfuscarAssembliesInclude>true</ObfuscarAssembliesInclude>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hsu.Obfuscar.DotNetTool" Version="2023.412.14-rc17">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+</Project>

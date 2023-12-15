@@ -1,0 +1,31 @@
+<Project>
+    <PropertyGroup Condition="'$(ObfuscarBuild)' == ''">
+        <ObfuscarBuild>true</ObfuscarBuild>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(ObfuscatedDir)' == ''">
+        <ObfuscatedDir>obfuscated</ObfuscatedDir>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(ObfuscarGlobalToolExists)' == ''">
+        <ObfuscarGlobalToolExists>-1</ObfuscarGlobalToolExists>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(ObfuscarRootPath)' == ''">
+        <ObfuscarRootPath>.obfuscar</ObfuscarRootPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(ObfuscarConfigName)' == ''">
+        <ObfuscarConfigName>obfuscar</ObfuscarConfigName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(ObfuscarAssembliesName)' == ''">
+        <ObfuscarAssembliesName>obfuscar.assemblies</ObfuscarAssembliesName>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ObfuscarConfigPath>$(ProjectDir)$(ObfuscarRootPath)\$(ObfuscarConfigName).xml</ObfuscarConfigPath>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' == ''">
+        <ObfuscarAssembliesInclude>false</ObfuscarAssembliesInclude>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <None Update="$(ObfuscarRootPath)\**\*" Condition="Exists($(ObfuscarRootPath))" />
+    </ItemGroup>
+</Project>
