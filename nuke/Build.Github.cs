@@ -14,7 +14,7 @@ using Octokit;
 
 [GitHubActions(
     "build",
-    GitHubActionsImage.WindowsLatest,
+    GitHubActionsImage.UbuntuLatest,
     AutoGenerate = true,
     PublishArtifacts = true,
     EnableGitHubToken = true,
@@ -24,7 +24,7 @@ using Octokit;
 )]
 [GitHubActions(
     "deploy",
-    GitHubActionsImage.WindowsLatest,
+    GitHubActionsImage.UbuntuLatest,
     AutoGenerate = true,
     PublishArtifacts = true,
     EnableGitHubToken = true,

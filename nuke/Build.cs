@@ -70,6 +70,19 @@ partial class Build : NukeBuild
             ArtifactsDirectory.CreateOrCleanDirectory();
         });
 
+    // Target Compile => _ => _
+    //     .Description("Compile Projects")
+    //     .DependsOn(Clean)
+    //     .Executes(() =>
+    //     {
+    //         DotNetBuild(p => p
+    //             .SetProjectFile(Solution)
+    //             .SetConfiguration(Configuration)
+    //             .SetVersion(Version)
+    //             .EnableContinuousIntegrationBuild()
+    //         );
+    //     });
+
     Target Pack => _ => _
         .Description("Pack Projects")
         .DependsOn(Clean)
@@ -79,6 +92,8 @@ partial class Build : NukeBuild
                 .SetProject(Solution)
                 .SetConfiguration(Configuration)
                 .SetVersion(Version)
+                .SetNoBuild(true)
+                .SetNoRestore(true)
                 .EnableContinuousIntegrationBuild()
             );
         });

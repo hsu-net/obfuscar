@@ -1,6 +1,17 @@
 # Hsu.Obfuscar.DotNetTool
+[![dev](https://github.com/hsu-net/obfuscar/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/hsu-net/obfuscar/actions/workflows/build.yml)
+[![preview](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml/badge.svg?branch=preview)](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml)
+[![main](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml)
+[![Nuke Build](https://img.shields.io/badge/Nuke-Build-yellow.svg)](https://github.com/nuke-build/nuke)
 
 Use [Obfuscar.GlobalTool](https://www.nuget.org/packages/Obfuscar.GlobalTool) to obfuscate .NET code.
+
+## Package Version
+
+| Name | Source | Stable | Preview |
+|---|---|---|---|
+| Hsu.Obfuscar.DotNetTool | Nuget | [![NuGet](https://img.shields.io/nuget/v/Hsu.Obfuscar.DotNetTool?style=flat-square)](https://www.nuget.org/packages/Hsu.Obfuscar.DotNetTool) | [![NuGet](https://img.shields.io/nuget/vpre/Hsu.Obfuscar.DotNetTool?style=flat-square)](https://www.nuget.org/packages/Hsu.Obfuscar.DotNetTool) |
+| Hsu.Obfuscar.DotNetTool | MyGet | [![MyGet](https://img.shields.io/myget/godsharp/v/Hsu.Obfuscar.DotNetTool?style=flat-square&label=myget)](https://www.myget.org/feed/godsharp/package/nuget/Hsu.Obfuscar.DotNetTool) | [![MyGet](https://img.shields.io/myget/godsharp/vpre/Hsu.Obfuscar.DotNetTool?style=flat-square&label=myget)](https://www.myget.org/feed/godsharp/package/nuget/Hsu.Obfuscar.DotNetTool) |
 
 ## Usage
 

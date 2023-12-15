@@ -6,11 +6,12 @@
         <TargetFrameworks>net6.0;net8.0;</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
         <ObfuscarAssembliesInclude>true</ObfuscarAssembliesInclude>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Hsu.Obfuscar.DotNetTool" Version="2023.412.14-rc17">
+      <PackageReference Include="Hsu.Obfuscar.DotNetTool" Version="2023.412.14">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
