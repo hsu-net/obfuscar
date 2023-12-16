@@ -2,7 +2,10 @@
 [![dev](https://github.com/hsu-net/obfuscar/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/hsu-net/obfuscar/actions/workflows/build.yml)
 [![preview](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml/badge.svg?branch=preview)](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml)
 [![main](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/hsu-net/obfuscar/actions/workflows/deploy.yml)
+[![Obfuscar](https://img.shields.io/badge/Obfuscar-GlobalTool-yellow.svg)](https://github.com/obfuscar/obfuscar)
 [![Nuke Build](https://img.shields.io/badge/Nuke-Build-yellow.svg)](https://github.com/nuke-build/nuke)
+![windows](https://img.shields.io/badge/OS-Windows-blue.svg)
+![linux](https://img.shields.io/badge/OS-Linux-blue.svg)
 
 Use [Obfuscar.GlobalTool](https://www.nuget.org/packages/Obfuscar.GlobalTool) to obfuscate .NET code.
 

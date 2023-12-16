@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MimeMapping;
@@ -52,7 +51,7 @@ partial class Build
                     Name = tag,
                     Prerelease = true,
                     Draft = true,
-                    Body = $"Release v{Version} at {DateTime.Now:yyyy-MM-dd HH:mm:ss}"
+                    Body = $"Release v{Version} at {DateTimeNow():yyyy-MM-dd HH:mm:ss}"
                 });
 
             var uploads = ArtifactsDirectory.GlobFiles("**/*").NotNull().Select(async x =>

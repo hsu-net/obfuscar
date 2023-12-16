@@ -69,29 +69,16 @@ partial class Build : NukeBuild
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(x => x.DeleteDirectory());
             ArtifactsDirectory.CreateOrCleanDirectory();
         });
-    
+
     Target Restore => _ => _
         .Description("Restore Solution")
-        .DependsOn(Initial)
+        .DependsOn(Clean)
         .Executes(() =>
         {
             DotNetRestore(s => s
                 .SetProjectFile(Solution)
             );
         });
-
-    // Target Compile => _ => _
-    //     .Description("Compile Projects")
-    //     .DependsOn(Clean)
-    //     .Executes(() =>
-    //     {
-    //         DotNetBuild(p => p
-    //             .SetProjectFile(Solution)
-    //             .SetConfiguration(Configuration)
-    //             .SetVersion(Version)
-    //             .EnableContinuousIntegrationBuild()
-    //         );
-    //     });
 
     Target Pack => _ => _
         .Description("Pack Projects")
