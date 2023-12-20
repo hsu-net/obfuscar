@@ -39,6 +39,7 @@ partial class Build
     Target Release => _ => _
         .Description("Release")
         .DependsOn(Artifacts)
+        .ProceedAfterFailure()
         .Executes(async () =>
         {
             var tag = $"v{Version}";

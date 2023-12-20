@@ -4,11 +4,14 @@
     <Target Name="_ObfuscarGlobalToolRestore"
             BeforeTargets="Restore">
         <Exec
-                Condition="'$(ObfuscarBuild)' == 'true'"
+                Condition="'$(ObfuscarBuild)' == 'true' and '$(ObfuscarGlobalToolRestored)'=='false'"
                 ConsoleToMsBuild="true"
                 UseUtf8Encoding="Always"
                 Command="dotnet tool restore">
         </Exec>
+        <PropertyGroup Condition="'$(ObfuscarGlobalToolRestored)' == 'false'">
+            <ObfuscarGlobalToolRestored>true</ObfuscarGlobalToolRestored>
+        </PropertyGroup>
     </Target>
 
     <!-- check tool -->
@@ -57,7 +60,7 @@
             Name="_ObfuscarGetAssemblySearchPaths"
             BeforeTargets="ObfuscarTask"
             DependsOnTargets="_ObfuscarConfigFileCreate">
-        <ItemGroup Condition="'@(AssemblySearchNames)' != ''">
+        <ItemGroup Condition="'$(AssemblySearchNames)' != ''">
             <_ReferenceItems Include="@(ReferencePath)">
                 <Name>$([System.IO.Path]::GetFileName('%(Identity)'))</Name>
                 <Path>$([System.IO.Path]::GetDirectoryName('%(Identity)'))</Path>
@@ -69,20 +72,17 @@
             </AssemblySearchLines>
         </ItemGroup>
 
-        <Message Text="ReferenceItems:" Importance="high" />
-        <Message Text="@(ReferenceItems, '%0D%0A')" Importance="high" />
-
         <Message Text="AssemblySearchLines:" Importance="high" />
         <Message Text="@(AssemblySearchLines->'%(Line)', '%0D%0A')" Importance="high" />
 
-        <PropertyGroup Condition="'@(AssemblySearchNames)' != ''">
+        <PropertyGroup Condition="'$(AssemblySearchNames)' != ''">
             <ObfuscarAssembliesContents><![CDATA[<?xml version="1.0"?>
 <Include>
 @(AssemblySearchLines->'%(Line)', '%0D%0A')
 </Include>]]>
             </ObfuscarAssembliesContents>
         </PropertyGroup>
-        <PropertyGroup Condition="'@(AssemblySearchNames)' == ''">
+        <PropertyGroup Condition="'$(AssemblySearchNames)' == ''">
             <ObfuscarAssembliesContents><![CDATA[<?xml version="1.0"?>
 <Include>
     <AssemblySearchPath path='.' />
@@ -90,10 +90,8 @@
             </ObfuscarAssembliesContents>
         </PropertyGroup>
 
-        <Message Text="ObfuscarAssembliesContents:" Importance="high" />
-        <Message Text="$(ObfuscarAssembliesContents)" Importance="high" />
-
         <WriteLinesToFile
+                Overwrite="true"
                 File="$(OutputPath)\$(ObfuscarAssembliesName)"
                 Lines="$(ObfuscarAssembliesContents)" />
     </Target>
@@ -103,6 +101,9 @@
             BeforeTargets="ObfuscarTask"
             DependsOnTargets="_ObfuscarTask">
 
+        <PropertyGroup>
+            <ObfuscarConfigPath>$(ProjectDir)\$(ObfuscarConfigName)</ObfuscarConfigPath>
+        </PropertyGroup>
         <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' == 'true'">
             <ObfuscarAssembliesIncludeContent>
                 <Include path="$(ObfuscarAssembliesName)" />
@@ -144,8 +145,9 @@
         </PropertyGroup>
 
         <WriteLinesToFile
-                File="$(ObfuscarConfigPath)"
                 Condition="!Exists($(ObfuscarConfigPath))"
+                Overwrite="true"
+                File="$(ObfuscarConfigPath)"
                 Lines="$(ObfuscarContents)" />
     </Target>
     

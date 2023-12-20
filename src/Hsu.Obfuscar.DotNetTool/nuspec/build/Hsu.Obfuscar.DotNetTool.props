@@ -1,4 +1,8 @@
 <Project>
+    
+    <PropertyGroup Condition="'$(ObfuscarGlobalToolRestored)' == ''">
+        <ObfuscarGlobalToolRestored>false</ObfuscarGlobalToolRestored>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(ObfuscarBuild)' == ''">
         <ObfuscarBuild>true</ObfuscarBuild>
     </PropertyGroup>
@@ -18,11 +22,7 @@
         <ObfuscarAssembliesInclude>false</ObfuscarAssembliesInclude>
     </PropertyGroup>
     <PropertyGroup>
-        <AssemblySearchNames/>
+        <AssemblySearchNames />
         <!--<AssemblySearchNames>Microsoft.CodeAnalysis.dll;Microsoft.CodeAnalysis.CSharp.dll</AssemblySearchNames>-->
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="$(ObfuscarConfigName)" Condition="Exists($(ObfuscarConfigName))"/>
-    </ItemGroup>
 </Project>
