@@ -1,13 +1,17 @@
 <Project>
+
+    <!-- restore tool -->
     <Target Name="_ObfuscarGlobalToolRestore"
             BeforeTargets="Restore">
         <Exec
+                Condition="'$(ObfuscarBuild)' == 'true'"
                 ConsoleToMsBuild="true"
                 UseUtf8Encoding="Always"
                 Command="dotnet tool restore">
         </Exec>
     </Target>
 
+    <!-- check tool -->
     <Target Name="_ObfuscarGlobalToolCheckPrerequisites">
         <!-- check local -->
         <Exec
@@ -47,21 +51,67 @@
                 Condition="$(ObfuscarGlobalToolExists) != 1 AND $(ObfuscarGlobalToolExists) != 0"
                 Text="Not found 'Obfuscator.GlobalTool',please install it,see https://www.nuget.org/packages/Obfuscar.GlobalTool ."/>
     </Target>
-    
-    <Target Name="_ObfuscarTemplateTask"
-            Condition="'$(TargetFramework)' != ''"
+
+    <!-- generate `AssemblySearchPath` config file -->
+    <Target
+            Name="_ObfuscarGetAssemblySearchPaths"
+            BeforeTargets="ObfuscarTask"
+            DependsOnTargets="_ObfuscarConfigFileCreate">
+        <ItemGroup Condition="'@(AssemblySearchNames)' != ''">
+            <_ReferenceItems Include="@(ReferencePath)">
+                <Name>$([System.IO.Path]::GetFileName('%(Identity)'))</Name>
+                <Path>$([System.IO.Path]::GetDirectoryName('%(Identity)'))</Path>
+            </_ReferenceItems>
+            <ReferenceItems Include="%(_ReferenceItems.Path)" Condition="$(AssemblySearchNames.Contains('%(_ReferenceItems.Name)'))" />
+
+            <AssemblySearchLines Include="@(ReferenceItems)">
+                <Line><![CDATA[    <AssemblySearchPath path='%(Identity)' />]]></Line>
+            </AssemblySearchLines>
+        </ItemGroup>
+
+        <Message Text="ReferenceItems:" Importance="high" />
+        <Message Text="@(ReferenceItems, '%0D%0A')" Importance="high" />
+
+        <Message Text="AssemblySearchLines:" Importance="high" />
+        <Message Text="@(AssemblySearchLines->'%(Line)', '%0D%0A')" Importance="high" />
+
+        <PropertyGroup Condition="'@(AssemblySearchNames)' != ''">
+            <ObfuscarAssembliesContents><![CDATA[<?xml version="1.0"?>
+<Include>
+@(AssemblySearchLines->'%(Line)', '%0D%0A')
+</Include>]]>
+            </ObfuscarAssembliesContents>
+        </PropertyGroup>
+        <PropertyGroup Condition="'@(AssemblySearchNames)' == ''">
+            <ObfuscarAssembliesContents><![CDATA[<?xml version="1.0"?>
+<Include>
+    <AssemblySearchPath path='.' />
+</Include>]]>
+            </ObfuscarAssembliesContents>
+        </PropertyGroup>
+
+        <Message Text="ObfuscarAssembliesContents:" Importance="high" />
+        <Message Text="$(ObfuscarAssembliesContents)" Importance="high" />
+
+        <WriteLinesToFile
+                File="$(OutputPath)\$(ObfuscarAssembliesName)"
+                Lines="$(ObfuscarAssembliesContents)" />
+    </Target>
+
+    <!-- generate obfuscar config file -->
+    <Target Name="_ObfuscarConfigFileCreate"
             BeforeTargets="ObfuscarTask"
             DependsOnTargets="_ObfuscarTask">
 
         <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' == 'true'">
             <ObfuscarAssembliesIncludeContent>
-                <Include path="$(ObfuscarAssembliesName).xml" />
+                <Include path="$(ObfuscarAssembliesName)" />
             </ObfuscarAssembliesIncludeContent>
         </PropertyGroup>
         <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' != 'true'">
             <ObfuscarAssembliesIncludeContent></ObfuscarAssembliesIncludeContent>
         </PropertyGroup>
-        
+
         <PropertyGroup>
             <ObfuscarContents>
                 <![CDATA[<?xml version="1.0"?>
@@ -87,7 +137,7 @@
     <SkipEnums value="true" />
   </Module>
   
-  <!-- <Include path="$(ObfuscarAssembliesName).xml" /> -->
+  <!-- <Include path="$(ObfuscarAssembliesName)" /> -->
   $(ObfuscarAssembliesIncludeContent)
 </Obfuscator>]]>
             </ObfuscarContents>
@@ -97,37 +147,16 @@
                 File="$(ObfuscarConfigPath)"
                 Condition="!Exists($(ObfuscarConfigPath))"
                 Lines="$(ObfuscarContents)" />
-
-        <PropertyGroup Condition="'$(TargetFrameworks)' == ''">
-            <_ObfuscarAssembliesName>$(ObfuscarAssembliesName)</_ObfuscarAssembliesName>
-        </PropertyGroup>
-        <PropertyGroup Condition="'$(TargetFrameworks)' != ''">
-            <_ObfuscarAssembliesName>$(ObfuscarAssembliesName)-$(TargetFramework)</_ObfuscarAssembliesName>
-        </PropertyGroup>
-
-        <PropertyGroup>
-            <ObfuscarAssembliesPath>$(ProjectDir)$(ObfuscarRootPath)\$(_ObfuscarAssembliesName).xml</ObfuscarAssembliesPath>
-            <ObfuscarAssembliesContents><![CDATA[<?xml version="1.0"?>
-<Include>
-    <AssemblySearchPath path='.' />
-</Include>]]>
-            </ObfuscarAssembliesContents>
-        </PropertyGroup>
-        
-        <WriteLinesToFile
-                Condition="'$(ObfuscarAssembliesInclude)' == 'true' and !Exists($(ObfuscarAssembliesPath))"
-                File="$(ObfuscarAssembliesPath)"
-                Lines="$(ObfuscarAssembliesContents)" />
     </Target>
     
     <Target Name="_ObfuscarTask"
             Condition="'$(TargetFramework)' != ''"
             DependsOnTargets="_ObfuscarGlobalToolCheckPrerequisites">
         <PropertyGroup Condition="$(ObfuscarGlobalToolExists) == 0">
-            <ObfuscateCommand>obfuscar.console obfuscar.xml</ObfuscateCommand>
+            <ObfuscateCommand>obfuscar.console $(ObfuscarConfigName)</ObfuscateCommand>
         </PropertyGroup>
         <PropertyGroup Condition="$(ObfuscarGlobalToolExists) == 1">
-            <ObfuscateCommand>dotnet obfuscar.console obfuscar.xml</ObfuscateCommand>
+            <ObfuscateCommand>dotnet obfuscar.console $(ObfuscarConfigName)</ObfuscateCommand>
         </PropertyGroup>
     </Target>
 
@@ -136,16 +165,16 @@
             BeforeTargets="PackTask"
             DependsOnTargets="_ObfuscarTask"
             Condition="'$(ObfuscarBuild)'=='true' and '$(TargetFramework)' != ''">
+
+        <PropertyGroup>
+            <ObfuscarConfigPath>$(ProjectDir)\$(ObfuscarConfigName)</ObfuscarConfigPath>
+        </PropertyGroup>
         
         <Copy
-                Condition="'$(ObfuscarAssembliesInclude)' == 'true'"
-                SourceFiles="$(ObfuscarAssembliesPath)"
-                DestinationFiles="$(OutputPath)\$(ObfuscarAssembliesName).xml"
-                SkipUnchangedFiles="true"/>
-        <Copy
                 SourceFiles="$(ObfuscarConfigPath)"
-                DestinationFolder="$(OutputPath)"
+                DestinationFiles="$(OutputPath)\$(ObfuscarConfigName)"
                 SkipUnchangedFiles="true"/>
+        
         <Exec
                 Condition="$(ObfuscarGlobalToolExists) == 1 or $(ObfuscarGlobalToolExists) == 0" 
                 WorkingDirectory="$(OutputPath)" 

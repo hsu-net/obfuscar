@@ -2,15 +2,35 @@
 
     <PropertyGroup>
         <NoBuild>true</NoBuild>
+        <NoPackageAnalysis>true</NoPackageAnalysis>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <DevelopmentDependency>true</DevelopmentDependency>
         <IsPackable>true</IsPackable>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <!--https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference-->
-        <DevelopmentDependency>true</DevelopmentDependency>
+        <LangVersion>11</LangVersion>
+        <LicenseFile>LICENSE</LicenseFile>
+        <Copyright>Copyright © Hsu 2023-now</Copyright>
+        <Description>MSBuild for Obfuscar with Obfuscar.GlobalTool.</Description>
+        <PackageTags>Obfuscar;MSBuild;Hsu;</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/hsu-net/obfuscar</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/hsu-net/obfuscar.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
         <PackageOutputPath>..\..\artifacts</PackageOutputPath>
-        <!--  https://blog.walterlv.com/post/known-nuget-properties-in-csproj.html-->
-        <NuspecFile>Hsu.Obfuscar.DotNetTool.nuspec</NuspecFile>
-        <NuspecProperties>version=$(Version)</NuspecProperties>
     </PropertyGroup>
-
+    
+    <ItemGroup>
+        <None Include="nuspec\**\*" Pack="true" PackagePath="" />
+        <None Include="README.md" Pack="true" PackagePath="" />
+        <None Include="..\..\icon.png" Pack="true" PackagePath="" />
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="Tasks\**" />
+      <EmbeddedResource Remove="Tasks\**" />
+    </ItemGroup>
+    
 </Project>

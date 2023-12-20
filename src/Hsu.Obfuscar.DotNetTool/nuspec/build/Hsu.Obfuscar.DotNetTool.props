@@ -8,24 +8,21 @@
     <PropertyGroup Condition="'$(ObfuscarGlobalToolExists)' == ''">
         <ObfuscarGlobalToolExists>-1</ObfuscarGlobalToolExists>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(ObfuscarRootPath)' == ''">
-        <ObfuscarRootPath>.obfuscar</ObfuscarRootPath>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(ObfuscarConfigName)' == ''">
-        <ObfuscarConfigName>obfuscar</ObfuscarConfigName>
+        <ObfuscarConfigName>obfuscar.xml</ObfuscarConfigName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(ObfuscarAssembliesName)' == ''">
-        <ObfuscarAssembliesName>obfuscar.assemblies</ObfuscarAssembliesName>
+        <ObfuscarAssembliesName>obfuscar.assemblies.xml</ObfuscarAssembliesName>
     </PropertyGroup>
-    <PropertyGroup>
-        <ObfuscarConfigPath>$(ProjectDir)$(ObfuscarRootPath)\$(ObfuscarConfigName).xml</ObfuscarConfigPath>
-    </PropertyGroup>
-    
     <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' == ''">
         <ObfuscarAssembliesInclude>false</ObfuscarAssembliesInclude>
     </PropertyGroup>
-    
+    <PropertyGroup>
+        <AssemblySearchNames/>
+        <!--<AssemblySearchNames>Microsoft.CodeAnalysis.dll;Microsoft.CodeAnalysis.CSharp.dll</AssemblySearchNames>-->
+    </PropertyGroup>
+
     <ItemGroup>
-        <None Update="$(ObfuscarRootPath)\**\*" Condition="Exists($(ObfuscarRootPath))" />
+        <None Include="$(ObfuscarConfigName)" Condition="Exists($(ObfuscarConfigName))"/>
     </ItemGroup>
 </Project>
