@@ -110,7 +110,7 @@
             </ObfuscarAssembliesIncludeContent>
         </PropertyGroup>
         <PropertyGroup Condition="'$(ObfuscarAssembliesInclude)' != 'true'">
-            <ObfuscarAssembliesIncludeContent></ObfuscarAssembliesIncludeContent>
+            <ObfuscarAssembliesIncludeContent />
         </PropertyGroup>
 
         <PropertyGroup>
@@ -176,10 +176,13 @@
                 SourceFiles="$(ObfuscarConfigPath)"
                 DestinationFiles="$(OutputPath)\$(ObfuscarConfigName)"
                 SkipUnchangedFiles="true"/>
-        
+        <MakeDir 
+                Condition="!Exists('$(OutputPath)$(ObfuscatedDir)')"
+                Directories="$(OutputPath)$(ObfuscatedDir)" />
+
         <Exec
-                Condition="$(ObfuscarGlobalToolExists) == 1 or $(ObfuscarGlobalToolExists) == 0" 
-                WorkingDirectory="$(OutputPath)" 
+                Condition="$(ObfuscarGlobalToolExists) == 1 or $(ObfuscarGlobalToolExists) == 0"
+                WorkingDirectory="$(OutputPath)"
                 Command="$(ObfuscateCommand)"/>
 
         <ItemGroup>
