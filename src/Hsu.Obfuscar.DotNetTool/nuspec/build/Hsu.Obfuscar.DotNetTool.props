@@ -6,6 +6,9 @@
     <PropertyGroup Condition="'$(ObfuscarBuild)' == ''">
         <ObfuscarBuild>true</ObfuscarBuild>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(ObfuscarTargetPath)' == ''">
+        <ObfuscarTargetPath>.</ObfuscarTargetPath>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(ObfuscatedDir)' == ''">
         <ObfuscatedDir>obfuscated</ObfuscatedDir>
     </PropertyGroup>

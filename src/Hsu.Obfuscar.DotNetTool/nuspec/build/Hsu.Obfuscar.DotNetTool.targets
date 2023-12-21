@@ -120,8 +120,8 @@
   <!-- https://docs.obfuscar.com/getting-started/configuration -->
   <!-- https://github.com/obfuscar/obfuscar/blob/master/Obfuscar/Settings.cs -->
   
-  <Var name="InPath" value="." />
-  <Var name="OutPath" value=".\$(ObfuscatedDir)" />
+  <Var name="InPath" value="$(ObfuscarTargetPath)" />
+  <Var name="OutPath" value="$(ObfuscatedDir)" />
   <Var name="RenameFields" value="true" />
   <Var name="RenameProperties" value="true" />
   <Var name="RenameEvents" value="true" />
@@ -176,10 +176,7 @@
                 SourceFiles="$(ObfuscarConfigPath)"
                 DestinationFiles="$(OutputPath)\$(ObfuscarConfigName)"
                 SkipUnchangedFiles="true"/>
-        <MakeDir 
-                Condition="!Exists('$(OutputPath)$(ObfuscatedDir)')"
-                Directories="$(OutputPath)$(ObfuscatedDir)" />
-
+        
         <Exec
                 Condition="$(ObfuscarGlobalToolExists) == 1 or $(ObfuscarGlobalToolExists) == 0"
                 WorkingDirectory="$(OutputPath)"
