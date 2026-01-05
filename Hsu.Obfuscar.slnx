@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/nuke/">
+    <Project Path="nuke/NukeBuild.csproj">
+      <Build Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/sample/">
+    <Project Path="samples/ClassLibrarySample/ClassLibrarySample.csproj" />
+    <Project Path="samples/ConsoleSample/ConsoleSample.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Hsu.Obfuscar.DotNetTool/Hsu.Obfuscar.DotNetTool.csproj" />
+  </Folder>
+</Solution>

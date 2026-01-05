@@ -29,7 +29,7 @@
                 Text="ObfuscarGlobalToolLocalCheckOutput:'$(ObfuscarGlobalToolLocalCheckOutput)'"
                 Importance="high"
         />
-        <PropertyGroup Condition="$(ObfuscarGlobalToolGlobalCheckOutput) == 0">
+        <PropertyGroup Condition="$(ObfuscarGlobalToolLocalCheckOutput) == 0">
             <ObfuscarGlobalToolExists>1</ObfuscarGlobalToolExists>
         </PropertyGroup>
         <Message
@@ -50,7 +50,7 @@
             <ObfuscarGlobalToolExists>0</ObfuscarGlobalToolExists>
         </PropertyGroup>
         <Message
-                Condition="$(ObfuscarGlobalToolExists)==0"
+                Condition="$(ObfuscarGlobalToolExists) == 0"
                 Text="The project '$(ProjectName)' found Obfuscar.GlobalTool in global"
                 Importance="high"
         />
