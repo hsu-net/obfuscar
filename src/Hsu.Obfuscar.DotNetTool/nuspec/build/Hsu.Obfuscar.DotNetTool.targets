@@ -164,7 +164,7 @@
             <ObfuscateCommand>obfuscar.console $(ObfuscarConfigName)</ObfuscateCommand>
         </PropertyGroup>
         <PropertyGroup Condition="$(ObfuscarGlobalToolExists) == 1">
-            <ObfuscateCommand>dotnet run obfuscar.console $(ObfuscarConfigName)</ObfuscateCommand>
+            <ObfuscateCommand>dotnet tool run obfuscar.console $(ObfuscarConfigName)</ObfuscateCommand>
         </PropertyGroup>
     </Target>
 
