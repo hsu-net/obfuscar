@@ -27,7 +27,7 @@ jobs:
     name: ubuntu-latest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: 'Run: Deploy'
         run: ./build.cmd Deploy
         env:
@@ -35,7 +35,7 @@ jobs:
           MyGetApiKey: ${{ secrets.MY_GET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Publish: artifacts'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: artifacts
           path: artifacts
